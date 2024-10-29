@@ -86,28 +86,39 @@ def get_input_image(year: int) -> ee.Image:
     )
 
 
+# def get_label_image() -> ee.Image:
+#     """Get the European Space Agency WorldCover image.
+
+#     This remaps the ESA classifications with the Dynamic World classifications.
+#     Any missing value is filled with 0 (water).
+
+#     For more information, see:
+#         https://developers.google.com/earth-engine/datasets/catalog/ESA_WorldCover_v100
+#         https://developers.google.com/earth-engine/datasets/catalog/GOOGLE_DYNAMICWORLD_V1
+
+#     Returns: An Earth Engine image with land cover classification as indices.
+#     """
+#     # Remap the ESA classifications into the Dynamic World classifications
+#     fromValues = [10, 20, 30, 40, 50, 60, 70, 80, 90, 95, 100]
+#     toValues = [1, 5, 2, 4, 6, 7, 8, 0, 3, 3, 7]
+#     return (
+#         ee.Image("ESA/WorldCover/v100/2020")
+#         .select("Map")
+#         .remap(fromValues, toValues)
+#         .rename("landcover")
+#         .unmask(0)
+#         .byte()  # as unsinged 8-bit integer
+#     )
+
+
 def get_label_image() -> ee.Image:
-    """Get the European Space Agency WorldCover image.
+    CORINE_DATASET = "COPERNICUS/CORINE/V20/100m/2012"
+    CORINE_BAND = "landcover"
 
-    This remaps the ESA classifications with the Dynamic World classifications.
-    Any missing value is filled with 0 (water).
-
-    For more information, see:
-        https://developers.google.com/earth-engine/datasets/catalog/ESA_WorldCover_v100
-        https://developers.google.com/earth-engine/datasets/catalog/GOOGLE_DYNAMICWORLD_V1
-
-    Returns: An Earth Engine image with land cover classification as indices.
-    """
-    # Remap the ESA classifications into the Dynamic World classifications
-    fromValues = [10, 20, 30, 40, 50, 60, 70, 80, 90, 95, 100]
-    toValues = [1, 5, 2, 4, 6, 7, 8, 0, 3, 3, 7]
     return (
-        ee.Image("ESA/WorldCover/v100/2020")
-        .select("Map")
-        .remap(fromValues, toValues)
-        .rename("landcover")
-        .unmask(0)
-        .byte()  # as unsinged 8-bit integer
+        ee.Image(CORINE_DATASET)
+        .select(CORINE_BAND)
+        .unmask(0)  # fill missing values with 0 (water)       
     )
 
 
